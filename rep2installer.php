@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.01
+// rep2 installer version 1.02
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -574,7 +574,7 @@ $('#BTN_Install').click(function(){
 		}).success(function(json){
 			var msg = 'rep2 is installed. Do you want to disable host check and add installer link to the main menu?';
 			if(lang == 'ja'){ msg = 'rep2をインストールしました。続けてホストチェック無効化とインストーラリンクのメインメニューへの追加を実施しますか？'; }
-			bootbox.alert(msg,function(agree){
+			bootbox.confirm(msg,function(agree){
 				if(agree){
 					installOptions(true,true,true);
 				}else{
