@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.04
+// rep2 installer version 1.05
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -657,7 +657,7 @@ function installOptions(hostcheck,addmenu,reload){
 		});
 	}else if(addmenu){
 		indicator.fadeIn(function(){
-			$.getJSON('<?php echo $options['script']; ?>?mode=addlinktomain').error(function(){
+			$.getJSON('<?php echo $options['script']; ?>?mode=addlink').error(function(){
 				bootbox.alert('Error');
 			}).success(function(json){
 				if(lang == 'ja'){
