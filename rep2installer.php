@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.03
+// rep2 installer version 1.04
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -457,7 +457,7 @@ function staticHtml(){
 	<div class="row">
 		<div class="col-xs-12 text-center">
 			<button id="BTN_Disablehostcheck" class="btn btn-warning"><?php if($options['lang'] == 'ja'){ ?>ホストチェック無効化<?php }else{ ?>Disable host check<?php } ?></button>
-			<button id="BTN_Changeurl" class="btn btn-warning"><?php if($options['lang'] == 'ja'){ ?>インストーラのURLを複雑にする<?php }else{ ?>Change installer's URL tricky<?php } ?></button>
+			<button id="BTN_Changeurl" class="btn btn-info"><?php if($options['lang'] == 'ja'){ ?>インストーラのURLを複雑にする<?php }else{ ?>Change installer's URL tricky<?php } ?></button>
 		</div>
 	</div>
 
