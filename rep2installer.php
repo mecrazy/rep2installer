@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.00
+// rep2 installer version 1.01
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -312,8 +312,8 @@ function extractZip($zip_path){
 	$zip = new ZipArchive();
 	$res = $zip->open($zip_path);
 	if($res === true){
-		if(!file_exists('./temporary')){ mkdir('./temporary',0777); }
-		if(!file_exists('./data')){ mkdir('./data',0777); }
+		if(!file_exists('./temporary')){ mkdir('./temporary',0707); }
+		if(!file_exists('./data')){ mkdir('./data',0707); }
 		$zip->extractTo('./temporary/');
 		$zip->close();
 		$zipFrom = './temporary/rep2';
