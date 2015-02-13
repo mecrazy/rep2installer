@@ -1,7 +1,10 @@
 <?php
 //
-// rep2 installer by mecrazy ( http://mecrazy.net/ )
-// Tested version up from "1.8.103" to "1.8.104"
+// rep2 installer version 1.00
+//   by mecrazy ( http://mecrazy.net/ )
+//   MIT License.
+//
+//   Developer tested version up function from "1.8.103" to "1.8.104"
 //
 
 ini_set('error_reporting',E_ALL);
