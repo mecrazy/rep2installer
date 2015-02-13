@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.02
+// rep2 installer version 1.03
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -27,7 +27,7 @@ if($options['mode'] == 'checklatest'){
 	ajaxCheckVersion('latest');
 }elseif( ($options['mode'] == 'install') || ($options['mode'] == 'update')){
 	downloadFile($options['downloaduri'],$options['downloadpath']);
-	extractZip($path);
+	extractZip($options['downloadpath']);
 	$obj = array('success' => true);
 	$json = json_encode($obj);
 	header("Content-Type: application/json; charset=utf-8");
@@ -284,7 +284,7 @@ function ajaxChangeUrl(){
 		$newFile = generateRandomStr(40) . '.php';
 	}
 	copy($options['script'],$newFile);
-	ajaxAddlinkToMainMenu($newFile);
+	ajaxAddlink($newFile);
 
 	if(file_exists($newFile)){
 		unlink($options['script']);
@@ -628,7 +628,7 @@ function installOptions(hostcheck,addmenu,reload){
 				});
 			}).success(function(json){
 				if(addmenu){
-					$.getJSON('<?php echo $options['script']; ?>?mode=addlinktomain').error(function(){
+					$.getJSON('<?php echo $options['script']; ?>?mode=addlink').error(function(){
 						bootbox.alert('Error');
 					}).success(function(json){
 						if(lang == 'ja'){
