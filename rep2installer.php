@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.05
+// rep2 installer version 1.06
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -11,6 +11,7 @@ ini_set('error_reporting',E_ALL);
 
 //Options
 $options = array(
+	'installerversion' => '1.06', //rep2 installer version
 	'script' => basename(__FILE__), //Current script name
 	'mode' => 'static', //mode string to detect response ( 'static' as a default )
 	'installed' => false, //installed check result ( will be edited by function 'checkCurrentVersion' )
@@ -18,7 +19,10 @@ $options = array(
 	'downloadpath' => 'rep2_latest.zip', //downloaded rep2 zip file name on server
 	'versionfile' => './doc/ChangeLog.txt', //version check file on this server
 	'versionuri' => 'http://akid.s17.xrea.com/p2/doc/ChangeLog.txt', //version check file on remote server
-	'lang' => detectLang() //language mode string ( 'en' or 'ja' )
+	'lang' => detectLang(), //language mode string ( 'en' or 'ja' )
+	'installeruri' => 'https://raw.githubusercontent.com/mecrazy/rep2installer/master/rep2installer.php', //download rep2 installer from here
+	'installerpath' => 'rep2installer_latest.php', //downloaded rep2 installer file name on server
+	'wget' => checkWgetInstalled() //is wget command installed or not
 );
 
 if(isset($_GET['mode'])){ $options['mode'] = $_GET['mode']; }
@@ -44,6 +48,8 @@ if($options['mode'] == 'checklatest'){
 	ajaxAddlink();
 }elseif($options['mode'] == 'changeurl'){
 	ajaxChangeUrl();
+}elseif($options['mode'] == 'updateinstaller'){
+	ajaxUpdateInstaller();
 }elseif($options['mode'] == 'static'){
 	staticHtml();
 }else{
@@ -301,6 +307,24 @@ function ajaxChangeUrl(){
 
 }
 
+function ajaxUpdateInstaller(){
+	global $options;
+	if(file_exists($options['installeruri'])){ unlink($options['installeruri']); }
+	$command = 'wget -O ' . $options['installerpath'] . ' ' . $options['installeruri'];
+	$result = exec($command);
+	if(file_exists($options['script'])){ unlink($options['script']); }
+	copy($options['installerpath'],$options['script']);
+	$obj = array('success' => true,'result' => $result);
+	$json = json_encode($obj);
+	header("Content-Type: application/json; charset=utf-8");
+	echo $json;
+}
+
+function checkWgetInstalled(){
+	$whereis = exec('whereis wget');
+	return (preg_match('/(.|\r|\n)*?wget(.|\r|\n)*?\/wget/',$whereis,$match,PREG_OFFSET_CAPTURE));
+}
+
 function generateRandomStr($len){
 	$str = array_merge(range('a','z'),range('0','9'),range('0','9'),range('A','Z'),range('0','9'),range('0','9'));
 	$res = '';
@@ -377,7 +401,7 @@ function staticHtml(){
 
 <div class="navbar navbar-default">
 	<div class="navbar-header">
-		<div class="navbar-brand">rep2 <?php if($options['lang'] == 'ja'){ ?>インストーラ<?php }else{ ?>installer<?php } ?></div>
+		<div class="navbar-brand">rep2 <?php if($options['lang'] == 'ja'){ ?>インストーラ<?php }else{ ?>installer<?php } ?> ver <?php echo $options['installerversion']; ?></div>
 		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
@@ -423,6 +447,22 @@ function staticHtml(){
 			</div>
 		</div>
 	</div>
+
+<?php if($options['wget']){ ?>
+	<div class="row">
+		<div class="col-xs-12 text-center">
+			<button id="BTN_Updateinstaller" class="btn btn-info"><?php if($options['lang'] == 'ja'){ ?>インストーラをアップデートする<?php }else{ ?>Update installer<?php } ?></button>
+		</div>
+	</div>
+<?php }else{ ?>
+	<div class="row">
+		<div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 text-center">
+			<div class="alert alert-info">"wget"コマンドが使用可能な場合はインストーラ自体のアップデート機能が有効化されます。</div>
+		</div>
+	</div>
+<?php } ?>
+
+	<div class="row">&nbsp;</div>
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
@@ -760,6 +800,45 @@ $('#BTN_Changeurl').click(function(){
 		}
 	});
 });
+
+<?php if($options['wget']){ ?>
+
+$('#BTN_Updateinstaller').click(function(){
+	updateInstaller();
+});
+
+function updateInstaller(){
+	var msg = 'Do you agree to update rep2 installer?';
+	if(lang == 'ja'){
+		msg = 'rep2インストーラをアップデートしてよろしいですか？';
+	}
+	bootbox.confirm(msg,function(agree){
+		if(agree){
+			if(lang == 'ja'){
+				indicatorTxt.text('アップデートしています ...');
+			}else{
+				indicatorTxt.text('Updating now ...');
+			}
+			indicator.fadeIn(function(){
+				$.getJSON('<?php echo $options['script']; ?>?mode=updateinstaller').error(function(){
+					bootbox.alert('error');
+				}).success(function(json){
+					console.log(json);
+					if(json.redirectto != ''){
+						if(lang == 'ja'){
+							bootbox.alert('完了しました。',function(){ location.reload(); });
+						}else{
+							bootbox.alert('Complete.',function(){ location.reload(); });
+						}
+					}
+				}).complete(function(){
+					indicator.fadeOut();
+				});
+			});
+		}
+	});
+}
+<?php } ?>
 
 });
 </script>
