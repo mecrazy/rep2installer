@@ -11,7 +11,7 @@ ini_set('error_reporting',E_ALL);
 
 //Options
 $options = array(
-	'installerversion' => '1.06', //rep2 installer version
+	'installerversion' => '1.07', //rep2 installer version
 	'script' => basename(__FILE__), //Current script name
 	'mode' => 'static', //mode string to detect response ( 'static' as a default )
 	'installed' => false, //installed check result ( will be edited by function 'checkCurrentVersion' )
