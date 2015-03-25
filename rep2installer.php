@@ -1,6 +1,6 @@
 <?php
 //
-// rep2 installer version 1.06
+// rep2 installer version 1.07
 //   by mecrazy ( http://mecrazy.net/ )
 //   MIT License.
 //
@@ -15,6 +15,7 @@ $options = array(
 	'script' => basename(__FILE__), //Current script name
 	'mode' => 'static', //mode string to detect response ( 'static' as a default )
 	'installed' => false, //installed check result ( will be edited by function 'checkCurrentVersion' )
+	'installlog' => 'rep2install.log', //log file of installed files
 	'downloaduri' => 'http://akid.s17.xrea.com/cgi/dl/dl.php?dl=p2', //download rep2 from here
 	'downloadpath' => 'rep2_latest.zip', //downloaded rep2 zip file name on server
 	'versionfile' => './doc/ChangeLog.txt', //version check file on this server
@@ -174,20 +175,25 @@ function ajaxResetUser(){
 //Ajax uninstall
 function ajaxUninstall(){
 	global $options;
-	$arr = array();
-	if($dir = opendir("./")){
-		while(($file = readdir($dir)) !== false){
-			if($file != "." && $file != ".." && $file != $options['script'] && $file != "data"){
-				array_push($arr,$file);
-				if(is_dir($file)){
-					unlinkRecursive($file,true);
-				}else{
-					unlink($file);
-				}
-			}
+
+	if($installlog = @file_get_contents($options['installlog'])){
+		$objlog = json_decode($installlog,true);
+
+		//Uninstall directories
+		for($i=0; $i<count($objlog['dir']);$i++){
+			unlinkRecursive($objlog['dir'][$i]);
 		}
-		closedir($dir);
+
+		//Uninstall files
+		for($i=0; $i<count($objlog['file']);$i++){
+			unlink($objlog['file'][$i]);
+		}
+
+		//Remove install log
+		unlink($options['installlog']);
+
 	}
+
 	$obj = array('result' => true);
 	$json = json_encode($obj);
 	header("Content-Type: application/json; charset=utf-8");
@@ -342,7 +348,8 @@ function extractZip($zip_path){
 		$zip->close();
 		$zipFrom = './temporary/rep2';
 		$zipTo = '../rep2';
-		dir_copy($zipFrom, $zipTo);
+		dir_copy($zipFrom,$zipTo);
+		generateInstallLog($zipFrom);
 		unlinkRecursive($zipFrom,true);
 	}
 }
@@ -359,6 +366,32 @@ function dir_copy($dir_name,$new_dir){
 			closedir($dh);
 		}
 	}
+	return true;
+}
+
+function generateInstallLog($dir){
+	global $options;
+	$dirArr = array();
+	$fileArr = array();
+	if(is_dir($dir)){
+		if($dh = opendir($dir)){
+			while(($file = readdir($dh)) !== false){
+				if($file == "." || $file == ".."){ continue; }
+				if(is_dir($dir . "/" . $file)){
+					$dirArr[] = $file;
+				}else{
+					$fileArr[] = $file;
+				}
+			}
+			closedir($dh);
+		}
+	}
+	$obj = array(
+		'dir' => $dirArr,
+		'file' => $fileArr
+	);
+	$json = json_encode($obj);
+	file_put_contents($options['installlog'],$json);
 	return true;
 }
 
@@ -755,6 +788,7 @@ $('#BTN_Uninstall').click(function(){
 				$.getJSON('<?php echo $options['script']; ?>?mode=uninstall').error(function(){
 					console.log('error');
 				}).success(function(json){
+					console.log(json);
 					msg = 'rep2 is uninstalled.';
 					if(lang == 'ja'){ msg = 'rep2を削除しました。'; }
 					bootbox.alert(msg,function(){ location.reload(); });
