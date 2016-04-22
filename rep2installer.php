@@ -1,7 +1,7 @@
 <?php
 //
-// rep2 installer version 1.07
-//   by mecrazy ( http://mecrazy.net/ )
+// rep2 installer version 1.08
+//   by mecrazy ( https://mecrazy.net/ )
 //   MIT License.
 //
 //   Developer tested version up function from "1.8.103" to "1.8.104"
@@ -11,7 +11,7 @@ ini_set('error_reporting',E_ALL);
 
 //Options
 $options = array(
-	'installerversion' => '1.07', //rep2 installer version
+	'installerversion' => '1.08', //rep2 installer version
 	'script' => basename(__FILE__), //Current script name
 	'mode' => 'static', //mode string to detect response ( 'static' as a default )
 	'installed' => false, //installed check result ( will be edited by function 'checkCurrentVersion' )
@@ -421,7 +421,9 @@ function staticHtml(){
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <style>
 <!--
 .navbar .btn{ margin-left:10px; }
@@ -521,7 +523,7 @@ function staticHtml(){
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<button id="BTN_Addlink" class="btn btn-warning"><?php if($options['lang'] == 'ja'){ ?>rep2のメインメニューにインストーラへのリンクを追加<?php }else{ ?>Add a installer link to the main menu of rep2.<?php } ?></button>
+			<button id="BTN_Addlink" class="btn btn-warning"><?php if($options['lang'] == 'ja'){ ?>rep2のメインメニューに<br class="visible-xs">インストーラへのリンクを追加<?php }else{ ?>Add a installer link to the main menu of rep2.<?php } ?></button>
 		</div>
 	</div>
 
@@ -529,7 +531,7 @@ function staticHtml(){
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<button id="BTN_Disablehostcheck" class="btn btn-warning"><?php if($options['lang'] == 'ja'){ ?>ホストチェック無効化<?php }else{ ?>Disable host check<?php } ?></button>
+			<button id="BTN_Disablehostcheck" class="btn btn-warning"><?php if($options['lang'] == 'ja'){ ?>ホストチェック無効化<?php }else{ ?>Disable host check<?php } ?></button><br class="visible-xs"><br class="visible-xs">
 			<button id="BTN_Changeurl" class="btn btn-info"><?php if($options['lang'] == 'ja'){ ?>インストーラのURLを複雑にする<?php }else{ ?>Change installer's URL tricky<?php } ?></button>
 		</div>
 	</div>
@@ -538,7 +540,7 @@ function staticHtml(){
 
 	<div class="row">
 		<div class="col-xs-12 text-center">
-			<button id="BTN_Resetuser" class="btn btn-danger"><?php if($options['lang'] == 'ja'){ ?>ユーザ＆パスワードリセット<?php }else{ ?>Reset user name and password<?php } ?></button>
+			<button id="BTN_Resetuser" class="btn btn-danger"><?php if($options['lang'] == 'ja'){ ?>ユーザ＆パスワードリセット<?php }else{ ?>Reset user name and password<?php } ?></button><br class="visible-xs"><br class="visible-xs">
 			<button id="BTN_Uninstall" class="btn btn-danger"><?php if($options['lang'] == 'ja'){ ?>rep2をアンインストール<?php }else{ ?>Uninstall rep2<?php } ?></button>
 		</div>
 	</div>
@@ -566,10 +568,9 @@ function staticHtml(){
 	</div>
 </div>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 <script type="text/javascript">
 $(function(){
 
